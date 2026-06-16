@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="form-wrapper" style="margin-top: 170px;">
+
+    <h1 class="form-title">
+        Вход
+    </h1>
+
+    <form method="post">
+
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button type="submit" class="btn">
+            Войти
+        </button>
+
+    </form>
+
+</div>
+
+{% endblock %}

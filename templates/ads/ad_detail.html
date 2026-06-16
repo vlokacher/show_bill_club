@@ -1,0 +1,223 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="detail-card" style="margin-top: 150px;">
+
+    {% if ad.image %}
+
+        <img
+            src="{{ ad.image.url }}"
+            style="display: block; margin-left: auto; margin-right: auto;"
+            class="detail-image"
+        >
+
+    {% endif %}
+
+    <h1>
+        {{ ad.title }}
+    </h1>
+
+    <br>
+
+    <p>
+        {{ ad.description }}
+    </p>
+
+    <br>
+
+    {% if ad.price %}
+
+        <h2>
+            {{ ad.price }} ₽
+        </h2>
+
+    {% endif %}
+
+    <br>
+
+    <p>
+        Категория:
+        {{ ad.category.name }}
+    </p>
+
+    <p>
+        Автор:
+        {{ ad.author.first_name }}
+    </p>
+
+    <p>
+        Телефон:
+        {{ ad.author.profile.phone }}
+    </p>
+
+    <p>
+
+                    Статус:
+
+                    {% if ad.is_active %}
+
+                        <strong>
+                            Активно
+                        </strong>
+
+                    {% else %}
+
+                        <strong>
+                            Неактивно
+                        </strong>
+
+                    {% endif %}
+
+                </p>
+
+    <br>
+
+    {% if request.user == ad.author %}
+
+        <div class="ad-actions">
+
+            <a
+                href="{% url 'toggle_ad' ad.pk %}"
+                class="btn"
+            >
+
+                {% if ad.is_active %}
+                    Выключить
+                {% else %}
+                    Включить
+                {% endif %}
+
+            </a>
+
+            <a
+                href="{% url 'ad_edit' ad.pk %}"
+                class="btn"
+            >
+                Редактировать
+            </a>
+
+            <a
+                href="{% url 'ad_delete' ad.pk %}"
+                class="btn"
+            >
+                Удалить
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+<br><br>
+
+{% if request.user.is_authenticated %}
+
+    {% if request.user != ad.author %}
+
+        <div class="detail-card">
+
+            <h2>
+                Оставить отклик
+            </h2>
+
+            <br>
+
+            <form method="post">
+
+                {% csrf_token %}
+
+                {{ form.as_p }}
+
+                <button
+                    type="submit"
+                    class="btn"
+                >
+                    Отправить отклик
+                </button>
+
+            </form>
+
+        </div>
+
+    {% endif %}
+
+{% else %}
+
+    <div class="detail-card">
+
+        <p>
+
+            Чтобы оставить отклик —
+            <a href="{% url 'login' %}">
+                войдите
+            </a>
+
+        </p>
+
+    </div>
+
+{% endif %}
+
+<br><br>
+
+{% if request.user == ad.author %}
+
+    <div class="detail-card">
+
+        <h2>
+            Отклики
+        </h2>
+
+        <br>
+
+        {% for response in responses %}
+
+            <div class="response-card">
+
+                <strong>
+                    {{ response.author.first_name }}
+                </strong>
+
+                <br><br>
+
+                <p>
+
+                    <strong>
+                        Телефон:
+                    </strong>
+
+                    {{ response.author.profile.phone }}
+
+                </p>
+
+                <br>
+
+                <p>
+                    {{ response.text }}
+                </p>
+
+                <br>
+
+                <small>
+                    {{ response.created_at }}
+                </small>
+
+            </div>
+
+            <br>
+
+        {% empty %}
+
+            <p>
+                Пока нет откликов
+            </p>
+
+        {% endfor %}
+
+    </div>
+
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="delete-box" style="margin-top: 170px;">
+
+    <h1>
+        Удалить объявление?
+    </h1>
+
+    <br>
+
+    <p>
+        {{ ad.title }}
+    </p>
+
+    <br><br>
+
+    <form method="post">
+
+        {% csrf_token %}
+
+        <button type="submit" class="btn">
+            Удалить
+        </button>
+
+    </form>
+
+</div>
+
+{% endblock %}

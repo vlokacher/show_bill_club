@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1 class="page-title">
+    Объявления
+</h1>
+
+<div class="search-box">
+
+    <form method="get" class="search-form">
+
+        <input
+            type="text"
+            name="q"
+            placeholder="Поиск..."
+            value="{{ request.GET.q }}"
+            class="search-input"
+        >
+
+        <select
+            name="category"
+            class="search-select"
+        >
+
+            <option value="">
+                Все категории
+            </option>
+
+            {% for category in categories %}
+
+                <option
+                    value="{{ category.id }}"
+
+                    {% if request.GET.category == category.id|stringformat:"s" %}
+                        selected
+                    {% endif %}
+                >
+
+                    {{ category.name }}
+
+                </option>
+
+            {% endfor %}
+
+        </select>
+
+        <button type="submit" class="btn">
+            Найти
+        </button>
+
+    </form>
+
+</div>
+
+<br><br>
+
+<div class="ads-grid">
+
+    {% for ad in ads %}
+
+        <div class="ad-card">
+
+            <a href="{% url 'ad_detail' ad.pk %}">
+
+                <div class="ad-image">
+
+                    {% if ad.image %}
+
+                        <img src="{{ ad.image.url }}">
+
+                    {% else %}
+
+                        <img src="https://via.placeholder.com/300x250">
+
+                    {% endif %}
+
+                </div>
+
+            </a>
+
+            <div class="ad-content">
+
+                <h2 class="ad-title">
+                    {{ ad.title }}
+                </h2>
+
+                {% if ad.price %}
+
+                    <div class="ad-price">
+                        {{ ad.price }} ₽
+                    </div>
+
+                {% endif %}
+
+                <div class="ad-category">
+                    {{ ad.category.name }}
+                </div>
+
+                <a
+                    href="{% url 'ad_detail' ad.pk %}"
+                    class="btn"
+                >
+                    Подробнее
+                </a>
+
+            </div>
+
+        </div>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}
